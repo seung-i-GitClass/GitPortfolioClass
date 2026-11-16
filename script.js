@@ -1,3 +1,35 @@
+const themeToggle = document.getElementById("themeToggle");
+const themeStorageKey = "siportfolio-theme";
+let savedTheme = "light";
+
+try {
+  const storedTheme = localStorage.getItem(themeStorageKey);
+  if (storedTheme === "dark" || storedTheme === "light") savedTheme = storedTheme;
+} catch (error) {
+  console.error("테마 설정을 localStorage에서 불러오지 못했습니다.", error);
+}
+
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  themeToggle.setAttribute("aria-pressed", String(theme === "dark"));
+  themeToggle.setAttribute(
+    "aria-label",
+    theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"
+  );
+  themeToggle.firstElementChild.textContent = theme === "dark" ? "☀" : "☾";
+
+  try {
+    localStorage.setItem(themeStorageKey, theme);
+  } catch (error) {
+    console.error("테마 설정을 localStorage에 저장하지 못했습니다.", error);
+  }
+}
+
+setTheme(savedTheme);
+themeToggle.addEventListener("click", () => {
+  setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+});
+
 const revealItems = document.querySelectorAll(".reveal");
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
